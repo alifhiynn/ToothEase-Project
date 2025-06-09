@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List by Date</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            text-align: center;
+        }
+        input, button {
+            margin: 5px;
+            padding: 10px;
+        }
+        .list-section {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>List by Date</h1>
+
+        <input type="date" id="dateInput">
+        <input type="text" id="taskInput" placeholder="Enter task">
+        <button onclick="addTask()">Add Task</button>
+
+        <div class="list-section" id="taskList"></div>
+    </div>
+
+    <script>
+        let tasks = [];
+
+        function addTask() {
+            const date = document.getElementById("dateInput").value;
+            const task = document.getElementById("taskInput").value;
+
+            if (date && task) {
+                tasks.push({ date, task });
+                tasks.sort((a, b) => new Date(a.date) - new Date(b.date));
+                displayTasks();
+            }
+        }
+
+        function displayTasks() {
+            const listSection = document.getElementById("taskList");
+            listSection.innerHTML = "";
+
+            let groupedTasks = {};
+
+            tasks.forEach(({ date, task }) => {
+                if (!groupedTasks[date]) groupedTasks[date] = [];
+                groupedTasks[date].push(task);
+            });
+
+            Object.keys(groupedTasks).forEach(date => {
+                const dateHeading = document.createElement("h2");
+                dateHeading.textContent = date;
+
+                const taskList = document.createElement("ul");
+                groupedTasks[date].forEach(task => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = task;
+                    taskList.appendChild(listItem);
+                });
+
+                listSection.appendChild(dateHeading);
+                listSection.appendChild(taskList);
+            });
+        }
+    </script>
+
+</body>
+</html>
